@@ -7,7 +7,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 #CONFIGURATION
 TOKEN = "8807513107:AAFjNpsMv1QLoun2AF1kFHfoyG0L1nQgj8g"
-API_URL = "http://127.0.0.1:8000/planets"
+API_URL = "https://kepler-project.onrender.com/planets"
 
 #KEYBOARD LAYOUT
 keyboard = [
