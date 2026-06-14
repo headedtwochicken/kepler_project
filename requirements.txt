@@ -9,3 +9,4 @@ uvicorn
 matplotlib
 seaborn
 python-telegram-bot
+telegram
