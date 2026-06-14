@@ -6,7 +6,7 @@ from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 #CONFIGURATION
-TOKEN = "8807513107:AAFjNpsMv1QLoun2AF1kFHfoyG0L1nQgj8g"
+TOKEN = ""
 API_URL = "https://kepler-project.onrender.com/planets"
 
 #KEYBOARD LAYOUT
