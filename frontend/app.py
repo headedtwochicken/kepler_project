@@ -10,7 +10,7 @@ from scipy import stats
 
 st.set_page_config(page_title="Kepler Archive", layout="wide", initial_sidebar_state="collapsed")
 
-API_URL = "http://127.0.0.1:8000/planets"
+API_URL = "https://kepler-project.onrender.com"
 
 if 'page' not in st.session_state:
     st.session_state.page = "database"
