@@ -8,3 +8,4 @@ fastapi
 uvicorn
 matplotlib
 seaborn
+python-telegram-bot
