@@ -29,3 +29,7 @@ A full-stack Data Science project analyzing the NASA Kepler Exoplanet Search Res
 
 You can interact with our database and search for specific exoplanets directly through our smart Telegram bot:
 👉 [@keppleroo_bot](https://www.google.com/search?q=https://t.me/keppleroo_bot) 
+
+## 🌍 Live Web Interface
+You can explore our interactive dashboard and 3D planetary simulation directly in your browser:
+👉 **[Kepler Project Dashboard](https://keplerproject-43ccrihkuav2xeuyv47z8x.streamlit.app/)**
