@@ -1,15 +1,17 @@
 # python bot/bot.py
 
+import os
 import random
 import requests
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-#CONFIGURATION
-TOKEN = ""
+# CONFIGURATION
 API_URL = "https://kepler-project.onrender.com/planets"
 
-#KEYBOARD LAYOUT
+# KEYBOARD LAYOUT
 keyboard = [
     [KeyboardButton("📊 API Summary"), KeyboardButton("🟢 Habitable Zone")],
     [KeyboardButton("🎲 Random Planet"), KeyboardButton("📈 Database Stats")],
@@ -26,7 +28,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(welcome_message, reply_markup=reply_markup, parse_mode="Markdown")
 
-#MESSAGE HANDLER
+# MESSAGE HANDLER
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
 
@@ -138,13 +140,39 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await update.message.reply_text("❌ API Error during search.")
 
+# --- МАСКИРОВКА ДЛЯ RENDER (ФЕЙКОВЫЙ ВЕБ-СЕРВЕР) ---
+class DummyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        self.wfile.write(b"<h1>Kepler Bot is alive and hiding here!</h1>")
+
+def run_dummy_server():
+    # Render сам передаст нужный порт через переменную окружения PORT
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), DummyHandler)
+    server.serve_forever()
+# --- КОНЕЦ МАСКИРОВКИ ---
+
 def main():
-    app = Application.builder().token(TOKEN).build()
+    # 1. Запускаем фейковый сервер в параллельном потоке, чтобы обмануть Render
+    threading.Thread(target=run_dummy_server, daemon=True).start()
+
+    # 2. Безопасно достаем токен из переменных окружения (Environment Variables)
+    token = os.environ.get("TELEGRAM_TOKEN")
+    
+    if not token:
+        print("❌ ERROR: TELEGRAM_TOKEN is not set in environment variables!")
+        return
+
+    # 3. Запускаем самого бота
+    app = Application.builder().token(token).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
     print("🚀 Kepler Telegram Bot is running")
-    app.run_polling()
+    app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__":
     main()
