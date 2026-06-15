@@ -140,7 +140,6 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await update.message.reply_text("❌ API Error during search.")
 
-# --- МАСКИРОВКА ДЛЯ RENDER (ФЕЙКОВЫЙ ВЕБ-СЕРВЕР) ---
 class DummyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -149,24 +148,18 @@ class DummyHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"<h1>Kepler Bot is alive and hiding here!</h1>")
 
 def run_dummy_server():
-    # Render сам передаст нужный порт через переменную окружения PORT
     port = int(os.environ.get("PORT", 10000))
     server = HTTPServer(("0.0.0.0", port), DummyHandler)
     server.serve_forever()
-# --- КОНЕЦ МАСКИРОВКИ ---
 
 def main():
-    # 1. Запускаем фейковый сервер в параллельном потоке, чтобы обмануть Render
     threading.Thread(target=run_dummy_server, daemon=True).start()
-
-    # 2. Безопасно достаем токен из переменных окружения (Environment Variables)
     token = os.environ.get("TELEGRAM_TOKEN")
     
     if not token:
         print("❌ ERROR: TELEGRAM_TOKEN is not set in environment variables!")
         return
 
-    # 3. Запускаем самого бота
     app = Application.builder().token(token).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
