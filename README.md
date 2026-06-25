@@ -33,3 +33,6 @@ You can interact with our database and search for specific exoplanets directly t
 ## 🌍 Live Web Interface
 You can explore our interactive dashboard and 3D planetary simulation directly in your browser:
 👉 **[Kepler Project Dashboard](https://keplerproject-43ccrihkuav2xeuyv47z8x.streamlit.app/)**
+
+**[Dataset](https://www.kaggle.com/datasets/nasa/kepler-exoplanet-search-results/discussion/206974)**
+**[NASA.archive](https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=koi)**
